@@ -1,0 +1,188 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  id          String     @id @default(uuid())
+  fullName    String
+  email       String     @unique
+  password    String
+  status      Status     @default(PENDING)
+  group       Group      @relation(fields: [groupId], references: [id])
+  groupId     String
+  course      Course     @relation(fields: [courseId], references: [id])
+  courseId    String
+  type        CourseType
+  progress    Progress[]
+  submissions Submission[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@map("students")
+}
+
+model Group {
+  id          String     @id @default(uuid())
+  groupCode   String     @unique
+  course      Course     @relation(fields: [courseId], references: [id])
+  courseId    String
+  type        CourseType
+  students    Student[]
+  startDate   DateTime
+  endDate     DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Course {
+  id              String     @id @default(uuid())
+  courseCode      String     @unique
+  title           String
+  type            CourseType
+  durationWeeks   Int
+  executionPeriod String?
+  groups          Group[]
+  units           Unit[]
+  students        Student[] 
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
+
+model Unit {
+  id                  String     @id @default(uuid())
+  course              Course     @relation(fields: [courseId], references: [id])
+  courseId            String
+  unitCode            String
+  unitName            String
+  shortName           String
+  term                Int
+  noOfLessons         Int
+  nature              UnitNature
+  unitRequirements    String?
+  trainerRequirements String?
+  executionPeriod     String?
+  lessons             Lesson[]
+  progress            Progress[]
+   resources           Resource[]
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+}
+
+model Lesson {
+  id          String     @id @default(uuid())
+  unit        Unit       @relation(fields: [unitId], references: [id])
+  unitId      String
+  title       String
+  description String?
+  order       Int
+  enabled     Boolean    @default(false)
+  resources   Resource[]
+  progress    LessonProgress[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Resource {
+  id          String        @id @default(uuid())
+  title       String
+  type        ResourceType
+  unit        Unit?         @relation(fields: [unitId], references: [id])
+  unitId      String?
+  lesson      Lesson?       @relation(fields: [lessonId], references: [id])
+  lessonId    String?
+  fileUrl     String
+  description String?
+  uploadedBy  User          @relation(fields: [uploadedById], references: [id])
+  uploadedById String
+  submissions Submission[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Submission {
+  id           String     @id @default(uuid())
+  student      Student    @relation(fields: [studentId], references: [id])
+  studentId    String
+  resource     Resource   @relation(fields: [resourceId], references: [id])
+  resourceId   String
+  fileUrl      String
+  submittedAt  DateTime   @default(now())
+}
+
+model Progress {
+  id          String         @id @default(uuid())
+  student     Student        @relation(fields: [studentId], references: [id])
+  studentId   String
+  unit        Unit           @relation(fields: [unitId], references: [id])
+  unitId      String
+  completion  Float          @default(0.0)
+  lessons     LessonProgress[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model LessonProgress {
+  id          String   @id @default(uuid())
+  progress    Progress @relation(fields: [progressId], references: [id])
+  progressId  String
+  lesson      Lesson   @relation(fields: [lessonId], references: [id])
+  lessonId    String
+  status      ProgressStatus @default(NOT_STARTED)
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model User {
+  id          String     @id @default(uuid())
+  fullName    String
+  email       String     @unique
+  password    String
+  role        Role       @default(TRAINER)
+  status      Status     @default(ACTIVE)
+  resources   Resource[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+  PENDING
+}
+
+enum CourseType {
+  DIPLOMA
+  CERTIFICATE
+}
+
+enum UnitNature {
+  THEORY
+  PRACTICAL
+  MIXED
+}
+
+enum ProgressStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum ResourceType {
+  NOTE
+  ASSIGNMENT
+  REFERENCE_LINK
+  PDF
+  VIDEO
+}
+
+enum Role {
+  ADMIN
+  COORDINATOR
+  TRAINER
+}
