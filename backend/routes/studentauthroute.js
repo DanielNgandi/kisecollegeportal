@@ -1,13 +1,13 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { registerStudent, loginStudent, resetStudentPassword} = require('../controllers/studentauth');
-
+//import{ registerStudent, loginStudent, resetStudentPassword} from '../controllers/studentauth.js';
+import studentAuth from '../controllers/studentauth.js';
 // Student registration
-router.post('/register', registerStudent);
+router.post('/register', studentAuth.registerStudent);
 
 // Student login
-router.post('/login', loginStudent);
+router.post('/login', studentAuth.loginStudent);
 
-router.post('/resetpassword', resetStudentPassword);
+router.post('/resetpassword', studentAuth.resetStudentPassword);
 
-module.exports = router;
+export default router

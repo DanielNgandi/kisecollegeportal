@@ -1,7 +1,7 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const prisma = require('../config/prisma');
-const { JWT_SECRET } = require('../config/auth');
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import prisma from '../config/prisma.js';
+import { JWT_SECRET } from '../config/auth.js';
 
 const registerStudent = async (req, res) => {
   try {
@@ -166,7 +166,7 @@ const resetStudentPassword = async (req, res) => {
     res.status(500).json({ error: 'Password reset failed' });
   }
 };
-module.exports = {
+export default {
   registerStudent,
   loginStudent,
   resetStudentPassword

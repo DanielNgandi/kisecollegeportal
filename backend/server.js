@@ -1,8 +1,8 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const studentAuthRoutes = require('./routes/studentauthroute');
-const studentRoutes = require('./routes/studentroute');
+import 'dotenv/config'; 
+import express from 'express';
+import cors from 'cors';
+import studentAuthRoutes from './routes/studentauthroute.js';
+import studentRoutes from './routes/studentroute.js';
 
 const app = express();
 

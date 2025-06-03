@@ -1,8 +1,8 @@
-const jwt = require('jsonwebtoken');
-const prisma = require('../config/prisma');
-const { JWT_SECRET } = require('../config/auth');
+import jwt from 'jsonwebtoken';
+import prisma from '../config/prisma.js';
+import { JWT_SECRET } from '../config/auth.js';
 
-const authenticateStudent = async (req, res, next) => {
+export const authenticateStudent = async (req, res, next) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     
@@ -29,6 +29,3 @@ const authenticateStudent = async (req, res, next) => {
   }
 };
 
-module.exports = {
-  authenticateStudent
-};

@@ -1,7 +1,7 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const studentController = require('../controllers/studentController');
-const { authenticateStudent } = require('../middleware/authmiddleware');
+import studentController from '../controllers/studentcontroller.js';
+import { authenticateStudent } from'../middleware/authmiddleware.js';
 
 // Protected routes - require student authentication
 router.use(authenticateStudent);
@@ -13,4 +13,4 @@ router.get('/dashboard', studentController.getDashboardData);
 router.get('/courses', studentController.getStudentCourses);
 router.get('/lessons/:lessonId', studentController.getLessonDetails);
 
-module.exports = router;
+export default router

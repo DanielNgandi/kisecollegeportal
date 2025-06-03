@@ -1,4 +1,4 @@
-const prisma = require('../config/prisma');
+import prisma from '../config/prisma.js';
 
 const getDashboardData = async (req, res) => {
   try {
@@ -221,8 +221,8 @@ const getLessonDetails = async (req, res) => {
   }
 };
 
-module.exports = {
-  getDashboardData,
-  getStudentCourses,
-  getLessonDetails
+export default { 
+  getDashboardData, 
+  getStudentCourses, 
+  getLessonDetails 
 };
